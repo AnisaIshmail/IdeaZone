@@ -1,47 +1,35 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 
 import PostContainer from './PostContainer';
-import Modal from './Modal';
+import ModalIdea from './../common/ModalIdea';
 
-import getData from '../data/getData';
+// TODO complete refactor
 
 // Search page / posts page
 class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
       search: '',
       searchData: []
     }
   }
   
   componentDidMount() {
-    console.log('props data searchPage: ', this.props.data);
-    // load data, only runs when data is finished loading
-    getData((res) => {
-      // update state to data
+  // searchLinked is for searches passed in the url ( tags for example )
+  let searchLinked = this.props.location.query.search ? this.props.location.query.search : '',
+      searchData;
+  
+  // if a search is passed in url
+  if ( searchLinked !== undefined && searchLinked.length > 0 ) {
+    searchData = this.sortData(searchLinked);
+    window.location.hash = '#/';
       this.setState({
-        data: res.ideas
+        searchData: searchData
       });
-      
-      // searchLinked is for searches passed in the url ( tags for example )
-      let searchLinked = this.props.location.query.search ? this.props.location.query.search : '',
-          searchData;
-      
-      // if a search is passed in url
-      if ( searchLinked != undefined && searchLinked.length > 0 ) {
-        searchData = this.sortData(searchLinked);
-        window.location.hash = '#/';
-        } else {
-          searchData = this.sortData(this.state.search);
-        }
-        
-        this.setState({
-          searchData: searchData
-        });
-   }); // get data
-  }
+    }
+  } // /componentDidMount
   
   sortData = (search) => {
     // Will sort based on search input
@@ -49,7 +37,17 @@ class SearchPage extends Component {
     // Shouldn't show duplicate matches ( if something matches a title and tags for example )
     // Should display the result as a post
     
-    let data = this.state.data,
+    // variables
+    let data = this.props.ideas,
+        dataFiltered = [],
+        results = [];
+    
+    // matches in title
+    // TODO setup new search
+    
+    /* OLD ///////////
+    
+    let data = this.props.data,
         searchRegex = new RegExp( search, 'ig' ),
         dataFiltered = [],
         results = [];
@@ -84,6 +82,7 @@ class SearchPage extends Component {
     });
     
     return results;
+    /////////// */
     
   }
   
@@ -96,11 +95,12 @@ class SearchPage extends Component {
   
   render() {
     // if there's search data use that otherwise use the normal unsorted data
-    let posts = this.state.searchData === undefined || this.state.searchData.length < 1 ? this.state.data : this.state.searchData;
-    
+    let posts = this.state.searchData === undefined || this.state.searchData.length < 1 ? this.props.ideas : this.state.searchData;
+    // TODO move modal to app.js split into 3 components
     return (
       <div>
-        <Modal modalType='add-idea' />
+        <ModalIdea handleAddIdea={this.props.handleAddIdea} />
+        
         <div className="container">
         
           <header className="text-center clearfix">
@@ -120,12 +120,16 @@ class SearchPage extends Component {
             </div>
           </form>
           
-          <PostContainer posts={posts} />
+          <PostContainer posts={posts} handleAddFavorite={this.props.handleAddFavorite} />
         </div>
       </div>
     )
   }
   
 }
+
+SearchPage.defaultProps = {
+  data: {}
+};
 
 export default SearchPage;
