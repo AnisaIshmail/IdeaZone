@@ -1,0 +1,164 @@
+.profile {
+  .nav-tabs {
+    border: none;
+  }
+  .nav-tabs > li {
+      display:inline-block;
+      float:none;
+      margin: 0 5%;
+      width: 40%;
+      zoom:1;
+      
+      &.active {
+        border-bottom: 5px solid $post--mint;
+        a {
+          color: darken($downy, 25%);
+          font-weight: bold;
+        }
+      }
+  }
+  
+  .nav-tabs {
+      text-align: center;
+  }
+}
+
+.profile__header {
+  h1 {
+    margin: 0.5em 0;
+  }
+  .profile__progress {
+    background-color: #d0d0d0;
+    border-width:1px;  
+    border-style:solid;
+    border-radius:5px;
+    border-color:#c0d4e8;
+    margin: 0 auto;
+    width: 90%;
+    
+    .progress__text {
+      color: #fff;
+      left: 0;
+      right: 0;
+      margin: 0;
+      position: absolute;
+    }
+    
+    .progress-bar {
+      animation-iteration-count: infinite;
+      animation-duration: 10s;
+      animation-name: level-up;
+      animation-timing-function: linear;
+      width: 3%;
+    }
+  }
+}
+
+@keyframes level-up {
+  0% {
+    background-color: lighten(red, 40%);
+    //width: 0%;
+  }
+  14% {
+    background-color: lighten(orange, 40%);
+    //width: 14%;
+  }
+  28% {
+    background-color: lighten(yellow, 40%);
+    //width: 28%;
+  }
+  42% {
+    background-color: lighten(green, 40%);
+    //width: 42%;
+  }
+  56% {
+    background-color: lighten(blue, 40%);
+    //width: 56%;
+  }
+  70% {
+    background-color: lighten(indigo, 40%);
+    //width: 70%;
+  }
+  84% {
+    background-color: lighten(violet, 15%);
+    //width: 84%;
+  }
+  100% {
+    background-color: lighten(red, 40%);
+    //width: 100%;
+  }
+
+}
+
+
+.profile__level {}
+
+.profile__desc {
+  background-color: #f6f6f6;
+  padding: 1.5em 0;
+  margin: 0 0 1em 0;
+}
+
+.profile__bio {
+  .bio__title {}
+  .bio__desc {}
+}
+
+.profile__ideas {}
+
+.profile__favorites__post {
+  border-style: solid;
+  border-radius:5px;
+  height: 200px;
+  padding: 1em;
+  margin-top: 1em;
+  overflow: hidden;
+   .post__title {
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .post__desc {
+    height: 80px;
+    overflow: hidden;
+  }
+
+
+}
+
+.profile__heart {
+  color: #ef5285;
+  font-size:30px;
+  font-weight: bold;
+  @include on-event() {
+    color: darken(#ef5285, 10%);
+  }
+}
+
+.profilePost--green {
+  border-color: $post--green;
+}
+
+.profilePost--purple {
+  border-color: $post--purple;
+}
+
+.profilePost--blue {
+  border-color: $post--blue;
+}
+
+.profilePost--mint {
+  border-color: $post--mint;
+}
+
+.profilePost--pink {
+  border-color: $post--pink;
+}
+
+.profilePost--grey {
+  border-color: $post--grey;
+}
+
+.profilePost--orange {
+  border-color: $post--orange;
+}
+

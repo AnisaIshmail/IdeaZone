@@ -402,6 +402,9 @@ template {
 [hidden] {
   display: none; }
 
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+  border: none; }
+
 /**
  * Set up a decent box model on the root element
  */
@@ -456,6 +459,9 @@ h4 {
 section {
   margin: 0 0 3em 0; }
 
+textarea {
+  max-width: 100%; }
+
 /**
  * Basic typography style for copy text
  */
@@ -492,6 +498,12 @@ section {
   display: block;
   margin: 0 auto; }
 
+.circle {
+  border-radius: 50%; }
+
+.pointer {
+  cursor: pointer; }
+
 footer {
   border-top: 1px solid #ddd;
   padding: 0.5em 0;
@@ -526,6 +538,17 @@ footer {
   border-right: 1px solid #ddd; }
   .navbar-default .navbar-nav > li:first-child {
     border-left: 1px solid #ddd; }
+  .navbar-default .navbar-nav > li.sign-out {
+    border-bottom: 3px solid transparent;
+    color: #555;
+    font-size: 1em;
+    transition: color 0.2s ease-in-out, border 0.2s ease-in-out; }
+    .navbar-default .navbar-nav > li.sign-out:hover, .navbar-default .navbar-nav > li.sign-out:active, .navbar-default .navbar-nav > li.sign-out:focus {
+      border-bottom: 3px solid #f00; }
+      .navbar-default .navbar-nav > li.sign-out:hover a, .navbar-default .navbar-nav > li.sign-out:active a, .navbar-default .navbar-nav > li.sign-out:focus a {
+        border-bottom: none; }
+    .navbar-default .navbar-nav > li.sign-out a {
+      border-bottom: none; }
 
 .navbar-brand {
   border-bottom: 3px solid transparent;
@@ -546,7 +569,7 @@ footer {
   max-height: 50px; }
   .userInfo .profilePic {
     max-width: 50px;
-    max-height: 50px;
+    max-height: 40px;
     float: right;
     margin: 5px; }
   .userInfo .username {
@@ -560,27 +583,57 @@ footer {
   margin-top: 1em;
   overflow: hidden; }
   .post .post__title {
-    color: #333;
     white-space: nowrap;
     overflow: hidden; }
   .post .post__desc {
-    color: #444;
     height: 80px;
     overflow: hidden; }
-  .post .post__heart {
+
+.post--card, .post--card--img {
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  margin: 0 0 2em 0;
+  padding: 1em; }
+  .post--card .post__title, .post--card--img .post__title {
+    margin: 1em 0 0 0; }
+
+.post__title {
+  color: #333; }
+
+.post__author {
+  display: block;
+  margin-bottom: 1em; }
+
+.post__desc {
+  color: #444; }
+
+.post__heart {
+  color: #ef5285;
+  font-weight: bold; }
+  .post__heart:hover, .post__heart:active, .post__heart:focus {
+    color: #eb2364; }
+  .post__heart--favorite {
     color: #ef5285;
     font-weight: bold; }
-    .post .post__heart:hover, .post .post__heart:active, .post .post__heart:focus {
-      color: #eb2364; }
-  .post .post__link {
-    color: #519D9E;
-    text-align: right; }
-    .post .post__link:hover {
-      text-decoration: none;
-      color: #6eb4b4; }
-  .post .post__favnum {
-    color: #6d9d88;
-    cursor: default; }
+    .post__heart--favorite:hover, .post__heart--favorite:active, .post__heart--favorite:focus {
+      color: #f598b6; }
+
+.post__link {
+  color: #519D9E;
+  text-align: right; }
+  .post__link:hover {
+    text-decoration: none;
+    color: #6eb4b4; }
+
+.post__favnum {
+  color: #6d9d88;
+  cursor: default; }
+
+.post__img {
+  display: block;
+  max-height: 240px;
+  margin: 0 auto;
+  max-width: 100%;
+  width: auto; }
 
 .post--green {
   background-color: #cff09e; }
@@ -624,6 +677,16 @@ footer {
     vertical-align: middle; }
 .project .project__stats {
   margin: 1em 0; }
+.project .project__heart {
+  color: #ef5285;
+  font-weight: bold; }
+  .project .project__heart:hover, .project .project__heart:active, .project .project__heart:focus {
+    color: #eb2364; }
+  .project .project__heart--favorite {
+    color: #ef5285;
+    font-weight: bold; }
+    .project .project__heart--favorite:hover, .project .project__heart--favorite:active, .project .project__heart--favorite:focus {
+      color: #f598b6; }
 .project .project__favnum {
   color: #6d9d88;
   cursor: default; }
@@ -673,6 +736,18 @@ footer {
 .carousel-indicators .active {
   background: #428bca; }
 
+.carousel-inner {
+  min-height: 200px;
+  max-height: 200px; }
+
+.carousel__img {
+  max-height: 180px;
+  width: auto; }
+
+.carousel__img--none {
+  min-height: 150px;
+  width: auto; }
+
 .react-logo {
   animation: react-logo-spin infinite 20s linear;
   height: 2em; }
@@ -682,37 +757,150 @@ footer {
     transform: rotate(0deg); }
   to {
     transform: rotate(360deg); } }
-.btn-twitter {
-  border-right: 1px solid rgba(0, 0, 0, 0.2);
-  color: #fff;
-  background-color: #55acee;
-  border-color: rgba(0, 0, 0, 0.2); }
-
-.btn-twitter:hover {
-  color: #fff;
-  background-color: #2795e9;
-  border-color: rgba(0, 0, 0, 0.2); }
-
-.btn-google {
-  border-right: 1px solid rgba(0, 0, 0, 0.2);
-  color: #fff;
-  background-color: #dd4b39;
-  border-color: rgba(0, 0, 0, 0.2); }
-
-.btn-google:hover {
-  color: #fff;
-  background-color: #c23321;
-  border-color: rgba(0, 0, 0, 0.2); }
-
 .btn-github {
   border-right: 1px solid rgba(0, 0, 0, 0.2);
   color: #fff;
   background-color: #444;
-  border-color: rgba(0, 0, 0, 0.2); }
+  border-color: rgba(0, 0, 0, 0.2);
+  margin: 5px; }
 
 .btn-github:hover {
   color: #fff;
   background-color: #2b2b2b;
   border-color: rgba(0, 0, 0, 0.2); }
+
+.btn-danger {
+  float: right;
+  margin-right: 50px; }
+
+/*.btn-twitter{
+  border-right: 1px solid rgba(0,0,0,0.2);
+  color:#fff;
+  background-color:#55acee;
+  border-color:rgba(0,0,0,0.2);
+  margin: 5px;
+}
+.btn-twitter:hover{
+  color:#fff;
+  background-color:#2795e9;
+  border-color:rgba(0,0,0,0.2);
+  
+}
+
+.btn-google{
+  border-right: 1px solid rgba(0,0,0,0.2);
+  color:#fff;
+  background-color:#dd4b39;
+  border-color:rgba(0,0,0,0.2);
+  margin: 5px;
+}
+ 
+.btn-google:hover{
+  color:#fff;
+  background-color:#c23321;
+  border-color:rgba(0,0,0,0.2);
+}*/
+.profile .nav-tabs {
+  border: none; }
+.profile .nav-tabs > li {
+  display: inline-block;
+  float: none;
+  margin: 0 5%;
+  width: 40%;
+  zoom: 1; }
+  .profile .nav-tabs > li.active {
+    border-bottom: 5px solid #D7FFF1; }
+    .profile .nav-tabs > li.active a {
+      color: #308675;
+      font-weight: bold; }
+.profile .nav-tabs {
+  text-align: center; }
+
+.profile__header h1 {
+  margin: 0.5em 0; }
+.profile__header .profile__progress {
+  background-color: #d0d0d0;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 5px;
+  border-color: #c0d4e8;
+  margin: 0 auto;
+  width: 90%; }
+  .profile__header .profile__progress .progress__text {
+    color: #fff;
+    left: 0;
+    right: 0;
+    margin: 0;
+    position: absolute; }
+  .profile__header .profile__progress .progress-bar {
+    animation-iteration-count: infinite;
+    animation-duration: 10s;
+    animation-name: level-up;
+    animation-timing-function: linear;
+    width: 3%; }
+
+@keyframes level-up {
+  0% {
+    background-color: #ffcccc; }
+  14% {
+    background-color: #ffedcc; }
+  28% {
+    background-color: #ffffcc; }
+  42% {
+    background-color: #4dff4d; }
+  56% {
+    background-color: #ccccff; }
+  70% {
+    background-color: #b54fff; }
+  84% {
+    background-color: #f7c5f7; }
+  100% {
+    background-color: #ffcccc; } }
+.profile__desc {
+  background-color: #f6f6f6;
+  padding: 1.5em 0;
+  margin: 0 0 1em 0; }
+
+.profile__favorites__post {
+  border-style: solid;
+  border-radius: 5px;
+  height: 200px;
+  padding: 1em;
+  margin-top: 1em;
+  overflow: hidden; }
+  .profile__favorites__post .post__title {
+    white-space: nowrap;
+    overflow: hidden; }
+  .profile__favorites__post .post__desc {
+    height: 80px;
+    overflow: hidden; }
+
+.profile__heart {
+  color: #ef5285;
+  font-size: 30px;
+  font-weight: bold; }
+  .profile__heart:hover, .profile__heart:active, .profile__heart:focus {
+    color: #eb2364; }
+
+.profilePost--green {
+  border-color: #cff09e; }
+
+.profilePost--purple {
+  border-color: #D1B6E1; }
+
+.profilePost--blue {
+  border-color: #e1eef6; }
+
+.profilePost--mint {
+  border-color: #D7FFF1; }
+
+.profilePost--pink {
+  border-color: #FADAD8; }
+
+.profilePost--grey {
+  border-color: #e4e7ec; }
+
+.profilePost--orange {
+  border-color: #FDD692; }
 
 /*# sourceMappingURL=main.css.map */

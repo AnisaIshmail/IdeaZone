@@ -26,7 +26,7 @@ class SearchPage extends Component {
     searchData = this.sortData(searchLinked);
     window.location.hash = '#/';
       this.setState({
-        searchData: searchData
+        searchData
       });
     }
   } // /componentDidMount
@@ -36,71 +36,83 @@ class SearchPage extends Component {
     // It will find: title -> relevant tags -> description in that order
     // Shouldn't show duplicate matches ( if something matches a title and tags for example )
     // Should display the result as a post
-    
     // variables
     let data = this.props.ideas,
-        dataFiltered = [],
-        results = [];
-    
-    // matches in title
-    // TODO setup new search
-    
-    /* OLD ///////////
-    
-    let data = this.props.data,
         searchRegex = new RegExp( search, 'ig' ),
-        dataFiltered = [],
-        results = [];
-    
+        dataFiltered = {},
+        results = {};
+        
     // matches in title
-    let titleSearch = data.filter( post => {
-      return post.title.match( searchRegex );
+    let titleMatches = {};
+    _.filter(data, post => {
+      const postTitle = post.title || '';
+      if (postTitle.match( searchRegex )) {
+        const postKey =  _.findKey(data, post);
+        titleMatches[postKey] = post;
+      }
     });
     
     // matches in tags
-    let tagSearch = data.filter( post => {
+    let tagMatches = {};
+    _.filter(data, post => {
+      const postTags = post.tags || '';
       // change array to string for simple regex matching
-      let tagString = post.tags.join(' ');
-      return tagString.match( searchRegex );
+      let tagString = postTags.join(' ');
+      
+      if (tagString.match( searchRegex )) {
+        const postKey =  _.findKey(data, post);
+        tagMatches[postKey] = post;
+      }
     });
     
     // matches in description
-    let descriptionSearch = data.filter( post => {
-      return post.description.match( searchRegex );
+    let descMatches = {};
+    _.filter(data, post => {
+      const postDesc = post.description || '';
+      if (postDesc.match( searchRegex )) {
+        const postKey =  _.findKey(data, post);
+        descMatches[postKey] = post;
+      }
     });
     
-    // concat the arrays into one
-    dataFiltered = titleSearch.concat(tagSearch, descriptionSearch);
+    //console.log('matches: ', titleMatches, tagMatches, descMatches);
     
-    // remove duplicate matches
-    results = dataFiltered.filter(function (item, pos) {return dataFiltered.indexOf(item) === pos});
+    // concat the arrays into one
+    // overrides, left to right
+    dataFiltered = _.assign({}, descMatches, tagMatches, titleMatches );
 
+    // remove duplicate matches | don't need to with objects / _.assign
+    results = dataFiltered;
+    
     // all matches merged, and duplicates removed
     this.setState({
       search: '',
       searchData: results
     });
     
-    return results;
-    /////////// */
+    // clear input
+    this.refs.searchInput.value = '';
     
-  }
+    results.length < 1 ? alert('Nothing for that search was found!') : null;
+    
+    return results;
+  } // /sortData
+  
   
   onSearchSubmit = ( e ) => {
     e.preventDefault();
     let search = this.refs.searchInput.value;
     
     this.sortData(search);
-  }
+  } // /onSearchSubmit
+  
+  
   
   render() {
     // if there's search data use that otherwise use the normal unsorted data
     let posts = this.state.searchData === undefined || this.state.searchData.length < 1 ? this.props.ideas : this.state.searchData;
-    // TODO move modal to app.js split into 3 components
     return (
       <div>
-        <ModalIdea handleAddIdea={this.props.handleAddIdea} />
-        
         <div className="container">
         
           <header className="text-center clearfix">
@@ -120,10 +132,10 @@ class SearchPage extends Component {
             </div>
           </form>
           
-          <PostContainer posts={posts} handleAddFavorite={this.props.handleAddFavorite} />
+          <PostContainer posts={posts} userFavorites={this.props.userFavorites} handleAddFavorite={this.props.handleAddFavorite} />
         </div>
       </div>
-    )
+    );
   }
   
 }

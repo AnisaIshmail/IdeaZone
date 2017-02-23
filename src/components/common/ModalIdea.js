@@ -4,7 +4,6 @@ import React from 'react';
 
 /*global $*/
 
-
 const ModalIdea = (props) => {
   // no refs on functional components
   let ideaTitle, ideaDesc, ideaImgUrl, ideaTags;
@@ -17,12 +16,12 @@ const ModalIdea = (props) => {
     }
   }
   
-  const onSubmit = (e) => {
+  const onAddIdea = (e) => {
     e.preventDefault();
     
     if( dataIsValid() ) {
       $('#addModal').modal('hide');
-      props.handleAddIdea(ideaTitle.value, ideaDesc.value, ideaImgUrl.value, ideaTags.value);
+      props.handleAddIdea( ideaTitle.value, ideaDesc.value, ideaImgUrl.value, ideaTags.value );
     }
   }
   
@@ -37,14 +36,14 @@ const ModalIdea = (props) => {
           
           <div className="modal-body">
             
-            <form onSubmit={onSubmit}>
+            <form onSubmit={onAddIdea}>
               <div className="form-group">
                 <label htmlFor="modalFormTitle">Title</label>
                 <input ref={ el => ideaTitle = el } type="text" className="form-control" id="modalFormTitle" placeholder="Enter name of project idea" required />
               </div>
               <div className="form-group">
                 <label htmlFor="modalFormDesc">Description</label>
-                <input ref={ el => ideaDesc = el } type="text" className="form-control" id="modalFormDesc" placeholder="Description of the project" required />
+                <textarea ref={ el => ideaDesc = el } type="text" className="form-control" id="modalFormDesc" placeholder="Description of the project" required />
               </div>
               <div className="form-group">
                 <label htmlFor="modalFormImg">Link / Url to an image to be used for the idea page</label>
@@ -59,7 +58,7 @@ const ModalIdea = (props) => {
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-            <button onClick={onSubmit} type="button" className="btn btn-primary">Add Idea</button>
+            <button onClick={onAddIdea} type="button" className="btn btn-primary">Add Idea</button>
           </div>
         </div>
       </div>

@@ -6,8 +6,6 @@ const ProjectInfo = (props) => {
   
   let { createdAt, description, imageUrl, ownerName, rating, tags, title } = props;
   
-  console.log('info props: ', props)
-  
   // load the image or use a default if none is provided
   const hasImg = imageUrl !== undefined && imageUrl.length > 0 ? true : false;
   const projectImage = hasImg ? 
@@ -27,15 +25,32 @@ const ProjectInfo = (props) => {
     });
   }
   
-  return(
+  const startAddFavorite = (e) => {
+    e.preventDefault();
+    props.handleAddFavorite(props.ideaID);
+  }
+  
+  let heartCSS = props.isFavorite ? "fa fa-heart fa-lg project__heart--favorite" : "fa fa-heart-o fa-lg project__heart";
+  
+  return (
      <section className="project">
-      <h1 className="text-center project__title">{title}</h1>
+       <header className="clearfix">
+          <h1 className="text-center project__title">{title}</h1>
+          
+          {
+            props.isOwner ? <button className="btn btn-default float-right" data-toggle="modal" data-target="#editModal" aria-hidden="true" title="Edit idea">
+            Edit Idea&nbsp;<i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+          </button> : ''
+          }
+          
+          
+        </header>
 
       <div className="row">
         <div className="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3">
           {projectImage}
           <div className="project__stats clearfix">
-            <i className="fa fa-heart-o fa-lg project__heart" aria-hidden="true"></i>
+            <i onClick={startAddFavorite} className={heartCSS} aria-hidden="true"></i>
             <span className="project__favnum">&nbsp;{rating || 0}</span>
             
             {postTags}

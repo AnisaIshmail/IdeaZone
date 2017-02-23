@@ -5,6 +5,9 @@ import moment from 'moment';
 import firebase, {firebaseRef, auth, firebaseIdeasRef, firebaseUsersRef} from './../data/firebase';
 import Navbar from './layout/Navbar';
 import Footer from './layout/Footer';
+import ModalIdea from './common/ModalIdea';
+import ModalEdit from './common/ModalEdit';
+import ModalResource from './common/ModalResource';
 
 // Appears on every page, other pages are passed to {props.children}
 class App extends Component {
@@ -15,7 +18,7 @@ class App extends Component {
       username: 'Anonymous',
       userAvatar: undefined,
       ideas: undefined,
-      userFavorites: undefined,
+      userFavorites: [],
       currentUserRef: undefined
     };
   }
@@ -65,7 +68,8 @@ class App extends Component {
         // logged out
         this.setState({
           userID: undefined,
-          username: 'Anonymous'
+          username: 'Anonymous',
+          userAvatar: undefined
         });
       }
     }); // /auth change
@@ -101,7 +105,8 @@ class App extends Component {
     
   } // /componentDidMount
   
-  addIdea = (ideaTitle, ideaDesc, ideaImgUrl, ideaTags) => {
+  
+  addIdea = ( ideaTitle, ideaDesc, ideaImgUrl, ideaTags ) => {
     // only logged in users can add ideas
     if (auth.currentUser) {
       // new idea to push up
@@ -123,6 +128,62 @@ class App extends Component {
       alert('Please sign in to add ideas!');
     }
   } // /addIdea
+  
+  
+  editIdea = ( ideaID, ideaTitle, ideaDesc, ideaImgUrl, ideaTags ) => {
+    if (auth.currentUser && this.state.ideas[ideaID].owner === auth.currentUser.uid) {
+      // new idea to push up
+      let updatedIdea = {
+        title: ideaTitle,
+        description: ideaDesc,
+        tags: ideaTags.split(', '),
+        imageUrl: ideaImgUrl
+      }
+      
+      let updatedIdeaRef = firebaseIdeasRef.child(ideaID).update(updatedIdea);
+    } else {
+      alert('Only the owner can edit this idea!');
+    }
+  } // /edit idea
+  
+  
+  // adding examples / tutorials
+  addResource = ( ideaID, exampleTitle, exampleLink, exampleImg, tutorialTitle, tutorialLink) => {
+    if (ideaID) {
+      // only logged in users can add resources
+      if (auth.currentUser) {
+        const ideaRef = firebaseIdeasRef.child(ideaID);
+        
+        // add example
+        if(exampleTitle && exampleLink) {
+          // TODO urls need a http:// in front if not included
+          let newExampleRef = ideaRef.child('examples').push({
+            title: exampleTitle,
+            imageUrl: exampleImg,
+            url: exampleLink
+          });
+        }
+        
+        // add tutorial
+        if(tutorialTitle && tutorialLink) {
+          // TODO urls need a http:// in front if not included
+          let newTutorialRef = ideaRef.child('tutorials').push({
+            text: tutorialTitle,
+            url: tutorialLink
+          });
+        }
+        
+      } else {
+        alert('Please sign in to add examples or tutorials!');
+      }
+    }
+  } // /addResource
+  
+  
+  removeResource = () => {
+    console.log('removing: ');
+  } // /removeResource
+  
   
   addFavoriteIdea = (ideaID) => {
     // pass current user id to post for rendering heart
@@ -149,6 +210,8 @@ class App extends Component {
     }
   } // /addFavoriteIdea
   
+  
+  
   render() {
     // use this.props.children.type.name to identify component being rendered
     //console.log('props.children: ', this.props.children);
@@ -172,7 +235,8 @@ class App extends Component {
       tutorials: []
     };
     
-    let componentToRender = this.props.children.type.name;
+    //let componentToRender = this.props.children...;
+    let componentToRender = this.props.children.props.route.componentName;
     // object of props to pass
     let dataToPass = {};
     
@@ -181,16 +245,23 @@ class App extends Component {
       case 'SearchPage':
         dataToPass = {
           ideas: this.state.ideas,
-          handleAddIdea: this.addIdea,
-          handleAddFavorite: this.addFavoriteIdea
+          handleAddFavorite: this.addFavoriteIdea,
+          userFavorites: this.state.userFavorites
         };
         break;
       case 'IdeaPage':
         let postID = this.props.location.query.id;
-        let postData = _.at(this.state.ideas, postID);
+        let postData = _.at(this.state.ideas, postID)[0] || defaultIdeaData;
+        let isOwner = auth.currentUser && postData.owner === auth.currentUser.uid;
+        let isFavorite = this.state.userFavorites.findIndex( (val) => val === postID ) >= 0 ? true : false;
+        
         dataToPass = {
-          postData: postData[0] || defaultIdeaData,
-          defaultIdeaData
+          postData: postData,
+          handleAddFavorite: this.addFavoriteIdea,
+          defaultIdeaData,
+          postID,
+          isOwner,
+          isFavorite
         };
         break;
       default:
@@ -200,6 +271,14 @@ class App extends Component {
     
     return (
       <div>
+        <ModalIdea handleAddIdea={this.addIdea} />
+        
+        {
+        _.at(this.state.ideas, this.props.location.query.id)[0] !== undefined ?
+        <ModalEdit handleEditIdea={this.editIdea} ideaID={this.props.location.query.id} ideaData={_.at(this.state.ideas, this.props.location.query.id)[0]} /> : null
+        }
+        
+        <ModalResource handleAddResource={this.addResource} ideaID={this.props.location.query.id} />
         <Navbar username={this.state.username} avatar={this.state.userAvatar} />
         
           {this.props.children && React.cloneElement(this.props.children, dataToPass)}
@@ -219,5 +298,15 @@ export default App;
 {this.props.children && React.cloneElement(this.props.children, {
   onRemoveTaco: this.handleRemoveTaco
 })}
+
+*/
+
+
+/* NOTES 
+STATE DATA
+
+object {
+  /IdeaZone/Design/idz-state-data.png
+}
 
 */

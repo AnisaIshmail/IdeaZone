@@ -4,7 +4,7 @@
 'abstracts/functions',
 'abstracts/mixins';
 // 2. Vendors
-@import 'vendor/normalize';
+@import 'vendor/normalize', 'vendor/bs-overrides';
 // 3. Base stuff
 @import 'base/base',
 'base/fonts',
@@ -21,7 +21,8 @@
 'components/imageSlider',
 'components/reactlogo',
 'components/login';
+
 // 6. Page-specific styles
-@import 'pages/about';
+@import 'pages/about', 'pages/profile';
 // 7. Themes
 @import 'themes/default';
